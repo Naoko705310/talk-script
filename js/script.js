@@ -107,10 +107,10 @@ const steps = {
     },
     15: {
         message: 'ここからは簡単にJ:COM MOBILEの料金プランをご案内させていただきます。\nいつもJ:COMをご利用いただき誠にありがとうございます。\n本日は、J:COMをお使いの皆様へ、特別に携帯電話料金プランをご案内させていただきます。\n\n現在のプロモーションでは、**通常料金のままでデータ容量が増量される**内容です。\n\n例えば、1GBプランの場合、月額980円のままで**5GB**までお使いいただけます。\n（※お客様の現在のデータ容量に応じて、適切な価格帯の例を提示）',
-        options: ['はい', 'いいえ'],
+        options: ['興味がある', '興味がない'],
         next: {
-            'はい': 17,
-            'いいえ': 99
+            '興味がある': 17,
+            '興味がない': 99
         }
     },
     16: {
@@ -266,7 +266,22 @@ function handleSelectionClick(e) {
         return;
     }
     
-    if (nextStep === 99) {
+    if (currentStep === 15) {
+        // ステップ15の場合の特別な処理
+        if (button.textContent === '興味がある') {
+            // ステップ17に進む
+            currentStep = 17;
+            showMessage(steps[currentStep].message);
+            // よくある質問を表示
+            showFAQ();
+            // 選択肢を更新
+            updateOptions(steps[currentStep].options);
+        } else if (button.textContent === '興味がない') {
+            // 終了ステップに進む
+            currentStep = 99;
+            showMessage(steps[currentStep].message);
+        }
+    } else if (nextStep === 99) {
         // 終了ステップの場合
         showMessage(steps[99].message);
     } else if (nextStep === 12) {
@@ -295,6 +310,8 @@ function handleSelectionClick(e) {
             showMessage(steps[currentStep].message);
             // よくある質問を非表示
             toggleFAQ(false);
+            // 選択肢を更新
+            updateOptions(steps[currentStep].options);
         }
     } else if (nextStep === 22 || nextStep === 23) {
         // ステップ22（ログインできる）または23（ログインできない）の場合
