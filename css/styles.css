@@ -1,0 +1,122 @@
+body {
+    font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.message {
+    margin-bottom: 20px;
+}
+
+.message-content {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.message-content a {
+    color: #0066cc;
+    text-decoration: underline;
+    word-break: break-all;
+}
+
+.message-content a:hover {
+    color: #004d99;
+}
+
+.faq-container {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.faq-container h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.faq-content {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #444;
+}
+
+.faq-content .question {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.faq-content .answer {
+    margin-bottom: 15px;
+    padding-left: 15px;
+    border-left: 3px solid #0066cc;
+}
+
+.options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.option-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.option-btn.yes {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.option-btn.no {
+    background-color: #f44336;
+    color: white;
+}
+
+.option-btn:hover {
+    opacity: 0.9;
+}
+
+.selection-options {
+    display: none;
+    margin-top: 20px;
+}
+
+.selection-btn {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #000;
+    background-color: transparent;
+    color: #000;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 10px;
+}
+
+.selection-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.selection-btn:active {
+    background-color: #000;
+    color: white;
+}
