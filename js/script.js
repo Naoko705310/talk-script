@@ -107,10 +107,10 @@ const steps = {
     },
     15: {
         message: 'ここからは簡単にJ:COM MOBILEの料金プランをご案内させていただきます。\nいつもJ:COMをご利用いただき誠にありがとうございます。\n本日は、J:COMをお使いの皆様へ、特別に携帯電話料金プランをご案内させていただきます。\n\n現在のプロモーションでは、**通常料金のままでデータ容量が増量される**内容です。\n\n例えば、1GBプランの場合、月額980円のままで**5GB**までお使いいただけます。\n（※お客様の現在のデータ容量に応じて、適切な価格帯の例を提示）',
-        options: ['興味がある', '興味がない'],
+        options: ['はい', 'いいえ'],
         next: {
-            '興味がある': 17,
-            '興味がない': 99
+            'はい': 17,
+            'いいえ': 99
         }
     },
     16: {
@@ -128,10 +128,10 @@ const steps = {
     },
     20: {
         message: 'お電話番号をそのままご利用いただくには、現在のキャリアで『MNP予約番号』の取得が必要となります。\n現在お使いの携帯会社のマイページやアプリにログインできる状態ですか？（IDとパスワードはご記憶でしょうか？）',
-        options: ['はい', 'いいえ'],
+        options: ['ログインできる', 'ログインできない'],
         next: {
-            'はい': 22,
-            'いいえ': 23
+            'ログインできる': 22,
+            'ログインできない': 23
         }
     },
     21: {
@@ -147,10 +147,10 @@ const steps = {
         }
     },
     23: {
-        message: '申し訳ありませんが、MNP予約番号の取得ができない場合は、お電話番号の変更が必要となります。',
+        message: 'ログイン方法や再発行についてはスタッフがサポートいたします。',
         options: [],
         next: {
-            '*': 99
+            '*': 24
         }
     },
     24: {
@@ -245,8 +245,26 @@ function handleSelectionClick(e) {
     const button = e.currentTarget;
     console.log(`クリックされたボタン: ${button.textContent}`);
     
+    // ステップの存在確認
+    if (!steps[currentStep]) {
+        console.error(`現在のステップ${currentStep}が見つかりません`);
+        return;
+    }
+    
+    // 選択肢の存在確認
+    if (!steps[currentStep].next[button.textContent] && !steps[currentStep].next['*']) {
+        console.error(`選択肢${button.textContent}の遷移先が定義されていません`);
+        return;
+    }
+    
     // 次のステップを取得
     const nextStep = steps[currentStep].next[button.textContent] || steps[currentStep].next['*'];
+    
+    // 次のステップの存在確認
+    if (!steps[nextStep]) {
+        console.error(`次のステップ${nextStep}が見つかりません`);
+        return;
+    }
     
     if (nextStep === 99) {
         // 終了ステップの場合
@@ -278,6 +296,13 @@ function handleSelectionClick(e) {
             // よくある質問を非表示
             toggleFAQ(false);
         }
+    } else if (nextStep === 22 || nextStep === 23) {
+        // ステップ22（ログインできる）または23（ログインできない）の場合
+        currentStep = nextStep;
+        showMessage(steps[currentStep].message);
+        // 次のステップに進む
+        currentStep = 24;
+        showMessage(steps[currentStep].message);
     } else {
         // その他のステップ
         currentStep = nextStep;
