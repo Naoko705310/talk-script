@@ -205,6 +205,8 @@ function showMessage(message) {
 // 選択肢を更新する関数
 function updateOptions(options) {
     const container = document.querySelector('.selection-options');
+    const yesButton = document.querySelector('.option-btn.yes');
+    const noButton = document.querySelector('.option-btn.no');
     
     if (!container) {
         console.error('選択肢のコンテナが見つかりません');
@@ -227,6 +229,15 @@ function updateOptions(options) {
     
     // ステップ4以降のみ選択肢を表示
     container.style.display = options.length > 0 ? 'block' : 'none';
+    
+    // YES/NOボタンの表示制御
+    if (yesButton && noButton) {
+        // 複数選択肢がある場合はYES/NOボタンを非表示
+        if (options.length > 2) {
+            yesButton.style.display = 'none';
+            noButton.style.display = 'none';
+        }
+    }
 }
 
 // 選択ボタンのクリックハンドラー
