@@ -47,7 +47,7 @@ const steps = {
     },
     7: {
         message: '本人確認に必要な在留カードをお持ちですか？',
-        options: ['あり', 'なし'],
+        options: ['はい', 'いいえ'],
         next: {
             '*': 8
         }
@@ -235,30 +235,69 @@ function updateOptions(options) {
     // コンテナの内容をクリア
     container.innerHTML = '';
     
-    // 新しい選択肢を追加
-    options.forEach(option => {
-        const button = document.createElement('button');
-        button.className = 'selection-btn';
-        button.textContent = option;
-        button.dataset.option = option;
-        button.addEventListener('click', handleSelectionClick);
-        container.appendChild(button);
-        console.log(`選択肢追加: ${option}`);
-    });
-    
-    // ステップ4以降のみ選択肢を表示
-    container.style.display = options.length > 0 ? 'block' : 'none';
-    
     // YES/NOボタンの表示制御
     if (yesButton && noButton) {
-        // 複数選択肢がある場合や特定のボタンのみの場合はYES/NOボタンを非表示
-        if (options.length > 2 || (options.length === 1 && options[0] === '対応終了')) {
-            yesButton.style.display = 'none';
-            noButton.style.display = 'none';
-        } else {
+        // 選択肢が「はい」と「いいえ」のみの場合は組み込みのYES/NOボタンを使用
+        const hasOnlyYesNo = options.length === 2 && 
+                          options.includes('はい') && 
+                          options.includes('いいえ');
+
+        if (hasOnlyYesNo) {
+            // YES/NOボタンを表示し、カスタム選択肢は表示しない
             yesButton.style.display = '';
             noButton.style.display = '';
+            container.style.display = 'none'; // カスタム選択肢を非表示
+        } else if (options.length > 2 || (options.length === 1 && options[0] === '対応終了')) {
+            // 複数選択肢がある場合や特定のボタンのみの場合はYES/NOボタンを非表示
+            yesButton.style.display = 'none';
+            noButton.style.display = 'none';
+            
+            // 新しい選択肢を追加
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'selection-btn';
+                button.textContent = option;
+                button.dataset.option = option;
+                button.addEventListener('click', handleSelectionClick);
+                container.appendChild(button);
+                console.log(`選択肢追加: ${option}`);
+            });
+            
+            // カスタム選択肢を表示
+            container.style.display = 'block';
+        } else {
+            // その他の場合はカスタム選択肢を表示
+            yesButton.style.display = 'none';
+            noButton.style.display = 'none';
+            
+            // 新しい選択肢を追加
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'selection-btn';
+                button.textContent = option;
+                button.dataset.option = option;
+                button.addEventListener('click', handleSelectionClick);
+                container.appendChild(button);
+                console.log(`選択肢追加: ${option}`);
+            });
+            
+            // カスタム選択肢を表示
+            container.style.display = 'block';
         }
+    } else {
+        // YES/NOボタンがない場合はカスタム選択肢のみ表示
+        options.forEach(option => {
+            const button = document.createElement('button');
+            button.className = 'selection-btn';
+            button.textContent = option;
+            button.dataset.option = option;
+            button.addEventListener('click', handleSelectionClick);
+            container.appendChild(button);
+            console.log(`選択肢追加: ${option}`);
+        });
+        
+        // カスタム選択肢を表示
+        container.style.display = options.length > 0 ? 'block' : 'none';
     }
 }
 
