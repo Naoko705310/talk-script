@@ -94,7 +94,7 @@ const steps = {
         message: 'お客様の端末は切替不可の機種です。契約後8日以内であればクーリングオフが可能ですが、引き続きご案内をご希望されますか？',
         options: ['はい', 'いいえ'],
         next: {
-            'はい': 14,
+            'はい': 15,
             'いいえ': 99
         }
     },
@@ -371,6 +371,7 @@ function handleSelectionClick(e) {
         // Q&Aを非表示
         toggleFAQ(false);
         updateOptions(steps[currentStep].options);
+    // ステップ13の「はい」の処理は通常の遷移処理で対応する
     } else if (nextStep === 22 || nextStep === 23) {
         // ステップ22（ログインできる）または23（ログインできない）の場合
         currentStep = nextStep;
