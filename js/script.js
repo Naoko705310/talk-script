@@ -616,10 +616,15 @@ function closeHistoryModal() {
     modal.style.display = 'none';
 }
 
-// 履歴を印刷する関数
+// 履歴をPDFで保存する関数
 function printHistory() {
-    // 印刷用に一時的なコンテンツを作成
+    // PDF保存用に一時的なコンテンツを作成
     const printContent = document.getElementById('historyContent').innerHTML;
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('ja-JP').replace(/\//g, '-');
+    const timeStr = now.toLocaleTimeString('ja-JP').replace(/:/g, '-');
+    const filename = `対応履歴レポート_${dateStr}_${timeStr}`;
+    
     const printWindow = window.open('', '_blank');
     
     printWindow.document.write(`
@@ -632,10 +637,23 @@ function printHistory() {
                 .history-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
                 .history-question { font-weight: bold; color: #FF9800; margin-bottom: 5px; }
                 .history-answer { padding-left: 15px; }
+                @media print {
+                    body { width: 21cm; height: 29.7cm; margin: 0; }
+                    #saveInfo { display: none; }
+                }
             </style>
         </head>
         <body>
             <h1>対応履歴レポート</h1>
+            <div id="saveInfo" style="background: #f5f5f5; padding: 10px; margin-bottom: 20px;">
+                <p>このページをPDFで保存するには、以下の手順に従ってください：</p>
+                <ol>
+                    <li>ブラウザの印刷メニューを開く(Ctrl+Pまたは⌘+P)</li>
+                    <li>出力先を「PDFに保存」や「PDFとして保存」に設定</li>
+                    <li>「保存」または「印刷」をクリック</li>
+                </ol>
+                <button onclick="window.print();" style="padding: 8px 12px; background: #FF9800; color: white; border: none; border-radius: 4px; cursor: pointer;">印刷ダイアログを開く</button>
+            </div>
             ${printContent}
         </body>
         </html>
@@ -643,7 +661,6 @@ function printHistory() {
     
     printWindow.document.close();
     printWindow.focus();
-    printWindow.print();
 }
 
 // ページ読み込み時の初期化
