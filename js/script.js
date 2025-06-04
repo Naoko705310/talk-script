@@ -122,8 +122,16 @@ const steps = {
         message: 'ここまでのご案内で、ご不安な点やご不明なことはございますか？',
         options: ['はい', 'いいえ'],
         next: {
-            'はい': 17,
+            'はい': 18,
             'いいえ': 20
+        }
+    },
+    18: {
+        message: 'よくあるご不安にお答えします。次に進みますか？',
+        options: ['興味がある', '興味がない'],
+        next: {
+            '興味がある': 20,
+            '興味がない': 99
         }
     },
     20: {
@@ -181,11 +189,13 @@ function showFAQ() {
     
     if (faqContainer) {
         faqContainer.innerHTML = `
+            <h3>Q&Aがここにはいります</h3>
             <p>1. 料金プランの詳細は？</p>
             <p>2. 契約後のサポートは？</p>
             <p>3. 端末の対応状況は？</p>
         `;
     }
+    toggleFAQ(true);
 }
 
 // メッセージを表示する関数
@@ -295,24 +305,19 @@ function handleSelectionClick(e) {
         updateOptions(steps[currentStep].options);
         // よくある質問を非表示
         toggleFAQ(false);
-    } else if (nextStep === 17) {
-        // ステップ17（よくある質問）の場合
+    } else if (nextStep === 18) {
+        // ステップ18（よくある質問）の場合
         currentStep = nextStep;
         showMessage(steps[currentStep].message);
         // よくある質問を表示
         showFAQ();
-        // 「はい」を選択した場合、同じステップにとどまる
-        if (button.textContent === 'はい') {
-            currentStep = 17;
-        } else {
-            // 「いいえ」を選択した場合、ステップ20に進む
-            currentStep = 20;
-            showMessage(steps[currentStep].message);
-            // よくある質問を非表示
-            toggleFAQ(false);
-            // 選択肢を更新
-            updateOptions(steps[currentStep].options);
-        }
+        // 選択肢を更新
+        updateOptions(steps[currentStep].options);
+    } else if (nextStep === 17) {
+        // ステップ17の場合
+        currentStep = nextStep;
+        showMessage(steps[currentStep].message);
+        updateOptions(steps[currentStep].options);
     } else if (nextStep === 22 || nextStep === 23) {
         // ステップ22（ログインできる）または23（ログインできない）の場合
         currentStep = nextStep;
