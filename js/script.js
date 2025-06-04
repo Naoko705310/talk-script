@@ -341,6 +341,10 @@ function handleSelectionClick(e) {
             // 終了ステップに進む
             currentStep = 99;
             showMessage(steps[currentStep].message);
+            
+            // 対応終了ボタンを表示する
+            const customOptions = ['対応終了'];
+            updateOptions(customOptions);
         }
     } else if (currentStep === 13 && button.textContent === 'いいえ') {
         // ステップ13でいいえを選択した場合
@@ -352,7 +356,12 @@ function handleSelectionClick(e) {
         updateOptions(customOptions);
     } else if (nextStep === 99) {
         // 終了ステップの場合
-        showMessage(steps[99].message);
+        currentStep = 99;
+        showMessage(steps[currentStep].message);
+        
+        // 対応終了ボタンを表示する
+        const customOptions = ['対応終了'];
+        updateOptions(customOptions);
     } else if (nextStep === 12) {
         // ステップ12（切替可能）の場合、次に進む
         currentStep = nextStep;
