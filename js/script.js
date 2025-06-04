@@ -317,6 +317,8 @@ function handleSelectionClick(e) {
         // ステップ17の場合
         currentStep = nextStep;
         showMessage(steps[currentStep].message);
+        // Q&Aを非表示
+        toggleFAQ(false);
         updateOptions(steps[currentStep].options);
     } else if (nextStep === 22 || nextStep === 23) {
         // ステップ22（ログインできる）または23（ログインできない）の場合
@@ -329,6 +331,12 @@ function handleSelectionClick(e) {
         // その他のステップ
         currentStep = nextStep;
         showMessage(steps[currentStep].message);
+        
+        // ステップ20以降ではQ&Aを非表示にする
+        if (currentStep >= 20) {
+            toggleFAQ(false);
+        }
+        
         // ステップ4以降で選択肢を表示
         if (currentStep >= 4) {
             updateOptions(steps[currentStep].options);
