@@ -494,43 +494,47 @@ function handleSelectionClick(e) {
     }
 }
 
-// 進捗サイドバーを初期化する関数
+// 進捗インジケーターを初期化する関数
 function initializeProgressSidebar() {
-    const progressList = document.getElementById('progress-list');
-    progressList.innerHTML = '';
+    const progressIndicator = document.getElementById('progress-indicator');
+    if (!progressIndicator) return;
     
-    // ステップのタイトルを取得してリストに追加
+    // リストをクリア
+    progressIndicator.innerHTML = '';
+    
+    // 各ステップの丸付き番号を追加
     for (let stepId in steps) {
-        // 基本ステップのみ表示、接続詞などのステップは除外
+        // 基本ステップのみ表示、特別なステップは除外
         if (parseInt(stepId) > 0 && parseInt(stepId) <= 24 && steps[stepId].title) {
-            const li = document.createElement('li');
-            li.dataset.step = stepId;
-            li.textContent = `質問 ${stepId}: ${steps[stepId].title}`;
-            progressList.appendChild(li);
+            const stepElement = document.createElement('div');
+            stepElement.className = 'progress-step';
+            stepElement.textContent = stepId;
+            stepElement.dataset.step = stepId;
+            stepElement.title = steps[stepId].title;
+            progressIndicator.appendChild(stepElement);
         }
     }
 }
 
-// 進捗状況を更新する関数
-function updateProgressSidebar(currentStep) {
-    const progressList = document.getElementById('progress-list');
-    if (!progressList) return;
+// 進捗インジケーターを更新する関数
+function updateProgressSidebar(currentStepNum) {
+    const progressIndicator = document.getElementById('progress-indicator');
+    if (!progressIndicator) return;
     
-    // すべてのステップからクラスを削除
-    const items = progressList.querySelectorAll('li');
-    items.forEach(item => {
-        item.classList.remove('active', 'completed');
-    });
-    
-    // 現在のステップと完了済みステップにクラスを追加
-    items.forEach(item => {
-        const step = parseInt(item.dataset.step);
-        if (step === currentStep) {
-            item.classList.add('active');
-            // 自動スクロール
-            item.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else if (step < currentStep) {
-            item.classList.add('completed');
+    // すべてのステップアイテムのクラスを更新
+    const steps = progressIndicator.querySelectorAll('.progress-step');
+    steps.forEach(step => {
+        const itemStep = parseInt(step.dataset.step);
+        
+        if (itemStep < currentStepNum) {
+            step.classList.remove('active');
+            step.classList.add('completed');
+        } else if (itemStep == currentStepNum) {
+            step.classList.add('active');
+            step.classList.remove('completed');
+        } else {
+            step.classList.remove('active');
+            step.classList.remove('completed');
         }
     });
 }
