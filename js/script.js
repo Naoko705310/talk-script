@@ -21,7 +21,7 @@ const steps = {
         options: ['はい', 'いいえ'],
         next: {
             'はい': 4,
-            'いいえ': 99
+            'いいえ': 98
         }
     },
     4: {
@@ -169,6 +169,14 @@ const steps = {
             '*': 99
         }
     },
+    98: {
+        message: 'お忙しい中大変失礼いたしました。改めてご案内させていただきますので、ご都合のよろしい日時を教えていただけますか？※土日は言語によって対応不可。JCOMの窓口は18時で終了することに注意。',
+        options: ['対応終了'],
+        next: {
+            '対応終了': 99,
+            '*': 99
+        }
+    },
     99: {
         message: 'ご案内が終了いたしました。何かご不明な点がございましたら、お気軽にお申し付けください。',
         options: [],
@@ -243,10 +251,13 @@ function updateOptions(options) {
     
     // YES/NOボタンの表示制御
     if (yesButton && noButton) {
-        // 複数選択肢がある場合はYES/NOボタンを非表示
-        if (options.length > 2) {
+        // 複数選択肢がある場合や特定のボタンのみの場合はYES/NOボタンを非表示
+        if (options.length > 2 || (options.length === 1 && options[0] === '対応終了')) {
             yesButton.style.display = 'none';
             noButton.style.display = 'none';
+        } else {
+            yesButton.style.display = '';
+            noButton.style.display = '';
         }
     }
 }
