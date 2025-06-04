@@ -364,8 +364,8 @@ function handleSelectionClick(e) {
             // ステップ17に進む
             currentStep = 17;
             showMessage(steps[currentStep].message);
-            // よくある質問を表示
-            showFAQ();
+            // Q&Aは表示しない
+            toggleFAQ(false);
             // 選択肢を更新
             updateOptions(steps[currentStep].options);
         } else if (button.textContent === '興味がない') {
