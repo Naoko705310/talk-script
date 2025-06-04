@@ -236,16 +236,17 @@ function showMessage(message) {
         // 対応終了ステップ以外の場合に履歴を記録
         if (currentStep !== 99) {
             // 既に同じステップの記録があるかチェック
-            const existingIndex = conversationHistory.findIndex(h => h.step === currentStep);
+            const existingIndex = conversationHistory.findIndex(h => parseInt(h.step) === parseInt(currentStep));
             
             if (existingIndex === -1) {
                 // 新しいステップの場合は追加
                 conversationHistory.push({
-                    step: currentStep,
+                    step: currentStep.toString(),
                     title: steps[currentStep].title,
                     message: message,
                     selection: null
                 });
+                console.log(`履歴追加: ステップ ${currentStep}`);
             }
         }
     }
@@ -349,9 +350,19 @@ function handleSelectionClick(e) {
     
     // 現在のステップで選択されたボタンを記録
     // 既存の履歴レコードを探して選択肢を追加
-    const historyIndex = conversationHistory.findIndex(h => h.step === currentStep);
+    const historyIndex = conversationHistory.findIndex(h => parseInt(h.step) === parseInt(currentStep));
     if (historyIndex !== -1) {
         conversationHistory[historyIndex].selection = button.textContent;
+        console.log(`選択記録: ステップ ${currentStep}, 選択: ${button.textContent}`);
+    } else {
+        // 履歴に記録がない場合は新規作成
+        conversationHistory.push({
+            step: currentStep.toString(),
+            title: steps[currentStep].title,
+            message: steps[currentStep].message,
+            selection: button.textContent
+        });
+        console.log(`新規選択記録: ステップ ${currentStep}, 選択: ${button.textContent}`);
     }
     
     // 対応終了ボタンが押された場合
@@ -552,27 +563,45 @@ function showHistoryModal() {
     `;
     historyContent.appendChild(headerDiv);
     
+    // すべての質問ステップを取得
+    const questionSteps = [];
+    for (let stepId in steps) {
+        if (parseInt(stepId) > 0 && parseInt(stepId) <= 21 && steps[stepId].title) {
+            questionSteps.push({
+                step: stepId,
+                title: steps[stepId].title
+            });
+        }
+    }
+    
+    // デバッグ情報
+    console.log('保存された対応履歴:', conversationHistory);
+    
     // 各質問と回答を追加
-    conversationHistory.forEach((item) => {
-        if (!item.title) return; // タイトルがない場合はスキップ
-        
+    questionSteps.forEach((question) => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'history-item';
         
         // 質問部分
         const questionDiv = document.createElement('div');
         questionDiv.className = 'history-question';
-        questionDiv.textContent = `質問 ${item.step}: ${item.title}`;
+        questionDiv.textContent = `質問 ${question.step}: ${question.title}`;
         itemDiv.appendChild(questionDiv);
         
         // 回答部分
-        if (item.selection) {
-            const answerDiv = document.createElement('div');
-            answerDiv.className = 'history-answer';
-            answerDiv.textContent = `回答: ${item.selection}`;
-            itemDiv.appendChild(answerDiv);
+        const answerDiv = document.createElement('div');
+        answerDiv.className = 'history-answer';
+        
+        // 対応履歴からこの質問の回答を探す
+        const historyItem = conversationHistory.find(item => parseInt(item.step) === parseInt(question.step));
+        
+        if (historyItem && historyItem.selection) {
+            answerDiv.textContent = `回答: ${historyItem.selection}`;
+        } else {
+            answerDiv.textContent = `回答: -`;
         }
         
+        itemDiv.appendChild(answerDiv);
         historyContent.appendChild(itemDiv);
     });
     
