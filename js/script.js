@@ -29,7 +29,7 @@ const steps = {
     },
     4: {
         title: '携帯会社の確認',
-        message: 'お客様にあった素敵なプランをご提案させていただきます。\n現在ご利用の携帯会社を教えていただけますか？\n限定キャンペーンや折り返しをご案内するためです。',
+        message: '差し支えなければ、現在ご利用のキャリア（携帯会社）を教えていただけますか？',
         options: ['docomo', 'au', 'SoftBank', '楽天モバイル', 'Y!mobile', 'UQモバイル', 'mineo', 'IIJmio', 'ahamo', 'povo', 'LINEMO', 'J:COM', 'その他', '不明'],
         next: {
             '*': 5
