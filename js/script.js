@@ -162,9 +162,10 @@ const steps = {
         }
     },
     24: {
-        message: 'MNP予約番号を取得できましたね。次に、ご契約の手続きに進みましょう。',
-        options: [],
+        message: '情報共有にお時間を頂き、有難うございました。ここからはJ:COMの専任スタッフにおつなぎいたします。  お申し込みやご質問の対応をさせていただきますのでご安心ください。\n\n※湘南センターへ電話を転送してトスアップ：電話番号：0466-77-8847\n無事に転送できたら、JCOMのスタッフに引き継ぎ。',
+        options: ['対応終了'],
         next: {
+            '対応終了': 99,
             '*': 99
         }
     },
@@ -327,6 +328,8 @@ function handleSelectionClick(e) {
         // 次のステップに進む
         currentStep = 24;
         showMessage(steps[currentStep].message);
+        // 選択肢を更新（対応終了ボタンを表示）
+        updateOptions(steps[currentStep].options);
     } else {
         // その他のステップ
         currentStep = nextStep;
