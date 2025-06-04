@@ -14,8 +14,32 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.message {
+h1 {
+    color: #FF9800;
+    font-size: 20px;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.center-info {
+    color: #333;
+    font-size: 14px;
+    text-align: center;
     margin-bottom: 20px;
+    font-weight: bold;
+    padding: 5px 0 10px 0;
+    border-bottom: 2px solid #FF9800;
+}
+
+.message {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #e6e6e6;
+    border-radius: 6px;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    background-color: #fafafa;
 }
 
 .message-content {

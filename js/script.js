@@ -76,7 +76,7 @@ const steps = {
         }
     },
     11: {
-        message: 'ありがとうございます。端末チェッカーで確認しますので、少々お待ちください.\nhttps://r.jcom.jp/zjkAzTm',
+        message: 'ありがとうございます。端末チェッカーで確認しますので、少々お待ちください.\n\n[端末チェッカーを開く](https://r.jcom.jp/zjkAzTm)',
         options: ['切替可能', '切替不可'],
         next: {
             '切替可能': 12,
@@ -215,7 +215,7 @@ function showMessage(message) {
         // マークダウンをHTMLに変換
         const convertedMessage = message
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **太字**を<strong>に変換
-            .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>'); // [リンク](URL)を<a>に変換
+            .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'); // [リンク](URL)を別ウィンドウで開く<a>に変換
         
         messageContent.innerHTML = convertedMessage;
         console.log('メッセージを表示:', message);
