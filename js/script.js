@@ -368,6 +368,8 @@ function handleSelectionClick(e) {
             toggleFAQ(false);
             // 選択肢を更新
             updateOptions(steps[currentStep].options);
+            // 進捗状況を更新
+            updateProgressSidebar(currentStep);
         } else if (button.textContent === '興味がない') {
             // 終了ステップに進む
             currentStep = 99;
@@ -402,6 +404,8 @@ function handleSelectionClick(e) {
         showMessage(steps[currentStep].message);
         // 選択肢を更新
         updateOptions(steps[currentStep].options);
+        // 進捗状況を更新
+        updateProgressSidebar(currentStep);
         // よくある質問を非表示
         toggleFAQ(false);
     } else if (nextStep === 18) {
@@ -412,6 +416,8 @@ function handleSelectionClick(e) {
         showFAQ();
         // 選択肢を更新
         updateOptions(steps[currentStep].options);
+        // 進捗状況を更新
+        updateProgressSidebar(currentStep);
     } else if (nextStep === 17) {
         // ステップ17の場合
         currentStep = nextStep;
@@ -446,18 +452,65 @@ function handleSelectionClick(e) {
     }
 }
 
+// 進捗サイドバーを初期化する関数
+function initializeProgressSidebar() {
+    const progressList = document.getElementById('progress-list');
+    progressList.innerHTML = '';
+    
+    // ステップのタイトルを取得してリストに追加
+    for (let stepId in steps) {
+        // 基本ステップのみ表示、接続詞などのステップは除外
+        if (parseInt(stepId) > 0 && parseInt(stepId) <= 24 && steps[stepId].title) {
+            const li = document.createElement('li');
+            li.dataset.step = stepId;
+            li.textContent = `質問 ${stepId}: ${steps[stepId].title}`;
+            progressList.appendChild(li);
+        }
+    }
+}
+
+// 進捗状況を更新する関数
+function updateProgressSidebar(currentStep) {
+    const progressList = document.getElementById('progress-list');
+    if (!progressList) return;
+    
+    // すべてのステップからクラスを削除
+    const items = progressList.querySelectorAll('li');
+    items.forEach(item => {
+        item.classList.remove('active', 'completed');
+    });
+    
+    // 現在のステップと完了済みステップにクラスを追加
+    items.forEach(item => {
+        const step = parseInt(item.dataset.step);
+        if (step === currentStep) {
+            item.classList.add('active');
+            // 自動スクロール
+            item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else if (step < currentStep) {
+            item.classList.add('completed');
+        }
+    });
+}
+
 // 現在のステップ
 let currentStep = 1;
 
 // 選択履歴
 let selections = {};
 
-// 初期表示
-showMessage(steps[currentStep].message);
-// ステップ1-3では選択肢を非表示
-if (currentStep >= 4) {
+// ページ読み込み時の初期化
+document.addEventListener('DOMContentLoaded', function() {
+    // サイドバーの初期化
+    initializeProgressSidebar();
+    
+    // 初期表示
+    currentStep = 1;
+    showMessage(steps[currentStep].message);
     updateOptions(steps[currentStep].options);
-}
+    updateProgressSidebar(currentStep);
+});
+
 
 // YES/NOボタンのイベントリスナーを追加
 const yesButton = document.querySelector('.option-btn.yes');
