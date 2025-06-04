@@ -125,64 +125,54 @@ const steps = {
         message: 'ここからは簡単にJ:COM MOBILEの料金プランをご案内させていただきます。\nいつもJ:COMをご利用いただき誠にありがとうございます。\n本日は、J:COMをお使いの皆様へ、特別に携帯電話料金プランをご案内させていただきます。\n\n現在のプロモーションでは、**通常料金のままでデータ容量が増量される**内容です。\n\n例えば、1GBプランの場合、月額980円のままで**5GB**までお使いいただけます。\n（※お客様の現在のデータ容量に応じて、適切な価格帯の例を提示）',
         options: ['興味がある', '興味がない'],
         next: {
-            '興味がある': 17,
+            '興味がある': 16,
             '興味がない': 99
         }
     },
     16: {
-        message: '',
-        options: [],
-        next: {}
-    },
-    17: {
         title: '理解度チェック',
         message: 'ここまでのご案内で、ご不安な点やご不明なことはございますか？',
         options: ['はい', 'いいえ'],
         next: {
-            'はい': 18,
-            'いいえ': 20
+            'はい': 17,
+            'いいえ': 18
         }
     },
-    18: {
+    17: {
         title: 'No消しのQ&A',
         message: 'よくあるご不安にお答えします。次に進みますか？',
         options: ['興味がある', '興味がない'],
         next: {
-            '興味がある': 20,
+            '興味がある': 18,
             '興味がない': 99
         }
     },
-    20: {
+    18: {
         title: 'マイページへのログイン可否',
         message: 'お電話番号をそのままご利用いただくには、現在のキャリアで「MNP予約番号」の取得が必要となります。\n現在お使いの携帯会社のマイページやアプリにログインできる状態ですか？（IDとパスワードはご記憶でしょうか？）',
         options: ['ログインできる', 'ログインできない'],
         next: {
-            'ログインできる': 22,
-            'ログインできない': 23
+            'ログインできる': 19,
+            'ログインできない': 20
         }
     },
-    21: {
-        message: '',
-        options: [],
-        next: {}
-    },
-    22: {
+    19: {
         title: 'MNP予約番号取得',
         message: 'マイページにログインし、MNP予約番号発行の項目に進んでください。取得できたらご連絡ください。',
         options: [],
         next: {
-            '*': 24
+            '*': 21
         }
     },
-    23: {
+    20: {
         title: 'サポートの提案',
         message: 'ログイン方法や再発行についてはスタッフがサポートいたします。',
         options: [],
         next: {
-            '*': 24
+            '*': 21
         }
     },
-    24: {
+    21: {
         title: 'トスアップ',
         message: '情報共有にお時間を頂き、有難うございました。ここからはJ:COMの専任スタッフにおつなぎいたします。  お申し込みやご質問の対応をさせていただきますのでご安心ください。\n\n※湘南センターへ電話を転送してトスアップ：電話番号：0466-77-8847\n無事に転送できたら、JCOMのスタッフに引き継ぎ。',
         options: ['対応終了'],
@@ -388,8 +378,8 @@ function handleSelectionClick(e) {
     if (currentStep === 15) {
         // ステップ15の場合の特別な処理
         if (button.textContent === '興味がある') {
-            // ステップ17に進む
-            currentStep = 17;
+            // ステップ16に進む
+            currentStep = 16;
             showMessage(steps[currentStep].message);
             // Q&Aは表示しない
             toggleFAQ(false);
@@ -441,8 +431,8 @@ function handleSelectionClick(e) {
         updateProgressSidebar(currentStep);
         // よくある質問を非表示
         toggleFAQ(false);
-    } else if (nextStep === 18) {
-        // ステップ18（よくある質問）の場合
+    } else if (nextStep === 17) {
+        // ステップ17（よくある質問）の場合
         currentStep = nextStep;
         showMessage(steps[currentStep].message);
         // よくある質問を表示
@@ -451,8 +441,8 @@ function handleSelectionClick(e) {
         updateOptions(steps[currentStep].options);
         // 進捗状況を更新
         updateProgressSidebar(currentStep);
-    } else if (nextStep === 17) {
-        // ステップ17の場合
+    } else if (nextStep === 16) {
+        // ステップ16の場合
         currentStep = nextStep;
         showMessage(steps[currentStep].message);
         // Q&Aを非表示
@@ -461,14 +451,14 @@ function handleSelectionClick(e) {
         // 進捗状況を更新
         updateProgressSidebar(currentStep);
     // ステップ13の「はい」の処理は通常の遷移処理で対応する
-    } else if (nextStep === 22 || nextStep === 23) {
-        // ステップ22（ログインできる）または23（ログインできない）の場合
+    } else if (nextStep === 19 || nextStep === 20) {
+        // ステップ19（ログインできる）または20（ログインできない）の場合
         currentStep = nextStep;
         showMessage(steps[currentStep].message);
         // 進捗状況を更新
         updateProgressSidebar(currentStep);
         // 次のステップに進む
-        currentStep = 24;
+        currentStep = 21;
         showMessage(steps[currentStep].message);
         // 選択肢を更新（対応終了ボタンを表示）
         updateOptions(steps[currentStep].options);
@@ -479,8 +469,8 @@ function handleSelectionClick(e) {
         currentStep = nextStep;
         showMessage(steps[currentStep].message);
         
-        // ステップ20以降ではQ&Aを非表示にする
-        if (currentStep >= 20) {
+        // ステップ18以降ではQ&Aを非表示にする
+        if (currentStep >= 18) {
             toggleFAQ(false);
         }
         
@@ -505,7 +495,7 @@ function initializeProgressSidebar() {
     // 各ステップの丸付き番号を追加
     for (let stepId in steps) {
         // 基本ステップのみ表示、特別なステップは除外
-        if (parseInt(stepId) > 0 && parseInt(stepId) <= 24 && steps[stepId].title) {
+        if (parseInt(stepId) > 0 && parseInt(stepId) <= 21 && steps[stepId].title) {
             const stepElement = document.createElement('div');
             stepElement.className = 'progress-step';
             stepElement.textContent = stepId;
