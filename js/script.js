@@ -378,6 +378,8 @@ function handleSelectionClick(e) {
             // 対応終了ボタンを表示する
             const customOptions = ['対応終了'];
             updateOptions(customOptions);
+            // 進捗状況を更新
+            updateProgressSidebar(currentStep);
         }
     } else if (currentStep === 13 && button.textContent === 'いいえ') {
         // ステップ13でいいえを選択した場合
@@ -387,14 +389,18 @@ function handleSelectionClick(e) {
         // 対応終了ボタンを表示する
         const customOptions = ['対応終了'];
         updateOptions(customOptions);
+        // 進捗状況を更新
+        updateProgressSidebar(currentStep);
     } else if (nextStep === 99) {
         // 終了ステップの場合
-        currentStep = 99;
+        currentStep = nextStep;
         showMessage(steps[currentStep].message);
         
         // 対応終了ボタンを表示する
         const customOptions = ['対応終了'];
         updateOptions(customOptions);
+        // 進捗状況を更新
+        updateProgressSidebar(currentStep);
     } else if (nextStep === 12) {
         // ステップ12（切替可能）の場合、次に進む
         currentStep = nextStep;
@@ -425,16 +431,22 @@ function handleSelectionClick(e) {
         // Q&Aを非表示
         toggleFAQ(false);
         updateOptions(steps[currentStep].options);
+        // 進捗状況を更新
+        updateProgressSidebar(currentStep);
     // ステップ13の「はい」の処理は通常の遷移処理で対応する
     } else if (nextStep === 22 || nextStep === 23) {
         // ステップ22（ログインできる）または23（ログインできない）の場合
         currentStep = nextStep;
         showMessage(steps[currentStep].message);
+        // 進捗状況を更新
+        updateProgressSidebar(currentStep);
         // 次のステップに進む
         currentStep = 24;
         showMessage(steps[currentStep].message);
         // 選択肢を更新（対応終了ボタンを表示）
         updateOptions(steps[currentStep].options);
+        // 進捗状況を更新
+        updateProgressSidebar(currentStep);
     } else {
         // その他のステップ
         currentStep = nextStep;
@@ -449,6 +461,9 @@ function handleSelectionClick(e) {
         if (currentStep >= 4) {
             updateOptions(steps[currentStep].options);
         }
+        
+        // 進捗状況を更新
+        updateProgressSidebar(currentStep);
     }
 }
 
