@@ -212,12 +212,15 @@ function showFAQ() {
 function showMessage(message) {
     const messageContent = document.querySelector('.message-content');
     if (messageContent) {
+        // 現在のステップ番号を取得
+        const stepNumberText = currentStep && currentStep !== 99 ? `質問 ${currentStep}: ` : '';
+        
         // マークダウンをHTMLに変換
         const convertedMessage = message
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **太字**を<strong>に変換
             .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'); // [リンク](URL)を別ウィンドウで開く<a>に変換
         
-        messageContent.innerHTML = convertedMessage;
+        messageContent.innerHTML = `<div class="step-number">${stepNumberText}</div>${convertedMessage}`;
         console.log('メッセージを表示:', message);
     }
 }
