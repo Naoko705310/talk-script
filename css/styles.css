@@ -226,21 +226,43 @@ h1 {
 }
 
 .faq-content {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #444;
+    margin-top: 15px;
+    padding-left: 15px;
+    border-left: 3px solid #FF9800;
+}
+
+.faq-item {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.faq-item h3 {
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: bold;
+}
+
+.faq-item p {
+    margin: 5px 0;
+    padding-left: 12px;
+    line-height: 1.5;
+    color: #555;
 }
 
 .faq-content .question {
     font-weight: bold;
-    margin-bottom: 8px;
-    color: #2c3e50;
+    margin-bottom: 5px;
+    color: #333;
 }
 
 .faq-content .answer {
     margin-bottom: 15px;
-    padding-left: 15px;
-    border-left: 3px solid #0066cc;
+    color: #555;
 }
 
 .options {

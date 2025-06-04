@@ -211,10 +211,23 @@ function showFAQ() {
     const faqContainer = document.querySelector('.faq-content');
     if (faqContainer) {
         faqContainer.innerHTML = `
-            <h3>JCOMモバイルについて</h3>
-            <p>1. 料金プランの詳細は？</p>
-            <p>2. 契約後のサポートは？</p>
-            <p>3. 端末の対応状況は？</p>
+            <div class="faq-item">
+                <h3>✅ 30GB以上の大容量で利用していてJ:COMだとプランがない、、、</h3>
+                <p>実際にはそこまで利用（消化）していない場合もあるため、現キャリアのマイページで確認してもらい実態を認識してもらう</p>
+                <p>J:COM NETとの併用をすることで抜えることも可能と伝え</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>✅ キャリアメールを利用しており、利用できなくなる、、、</h3>
+                <p>① キャリアメールを月額330円で継続し、ある程度が終えてからフリーメールに変えて</p>
+                <p>② キャリアメールの代わりに無料アドレス（iCloud, Gmail）を利用する提案をしてみる</p>
+            </div>
+            
+            <div class="faq-item">
+                <h3>✅ 国際電話を利用している</h3>
+                <p>① 実際の国際電話利用の状況を確認し、特別なプラン等で契約していないかを確認し</p>
+                <p>② ZOOM, skype, WhatsAppなどで、WiFi利用に切り替えを提案してみる</p>
+            </div>
         `;
     }
     // FAQを表示する
