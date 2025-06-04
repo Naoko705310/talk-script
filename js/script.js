@@ -219,36 +219,50 @@ function toggleFAQ(show) {
 // よくある質問（No消しQ&A）を表示する関数
 function showFAQ() {
     const faqContainer = document.querySelector('.faq-content');
-    
     if (faqContainer) {
         faqContainer.innerHTML = `
-            <h3>Q&Aがここにはいります</h3>
+            <h3>JCOMモバイルについて</h3>
             <p>1. 料金プランの詳細は？</p>
             <p>2. 契約後のサポートは？</p>
             <p>3. 端末の対応状況は？</p>
         `;
     }
+    // FAQを表示する
     toggleFAQ(true);
 }
 
 // メッセージを表示する関数
 function showMessage(message) {
-    const messageContent = document.querySelector('.message-content');
-    if (messageContent) {
-        // 現在のステップ番号とタイトルを取得
-        let stepNumberText = '';
-        if (currentStep && currentStep !== 99) {
-            const title = steps[currentStep].title || '';
-            stepNumberText = `質問 ${currentStep}: ${title}`;
+    // メッセージ内のリンクを変換
+    message = message.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
+    
+    // メッセージ表示前にステップ番号とタイトルを追加
+    let displayMessage = message;
+    
+    if (steps[currentStep]?.title) {
+        const stepNumberHtml = `<div class="step-number">質問 ${currentStep}: ${steps[currentStep].title}</div>`;
+        displayMessage = stepNumberHtml + displayMessage;
+        
+        // 対応終了ステップ以外の場合に履歴を記録
+        if (currentStep !== 99) {
+            // 既に同じステップの記録があるかチェック
+            const existingIndex = conversationHistory.findIndex(h => h.step === currentStep);
+            
+            if (existingIndex === -1) {
+                // 新しいステップの場合は追加
+                conversationHistory.push({
+                    step: currentStep,
+                    title: steps[currentStep].title,
+                    message: message,
+                    selection: null
+                });
+            }
         }
-        
-        // マークダウンをHTMLに変換
-        const convertedMessage = message
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // **太字**を<strong>に変換
-            .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>'); // [リンク](URL)を別ウィンドウで開く<a>に変換
-        
-        messageContent.innerHTML = `<div class="step-number">${stepNumberText}</div>${convertedMessage}`;
-        console.log('メッセージを表示:', message);
+    }
+    
+    const messageElement = document.querySelector('.message-content');
+    if (messageElement) {
+        messageElement.innerHTML = displayMessage;
     }
 }
 
@@ -340,6 +354,19 @@ function handleSelectionClick(e) {
     // ステップの存在確認
     if (!steps[currentStep]) {
         console.error(`現在のステップ${currentStep}が見つかりません`);
+        return;
+    }
+    
+    // 現在のステップで選択されたボタンを記録
+    // 既存の履歴レコードを探して選択肢を追加
+    const historyIndex = conversationHistory.findIndex(h => h.step === currentStep);
+    if (historyIndex !== -1) {
+        conversationHistory[historyIndex].selection = button.textContent;
+    }
+    
+    // 対応終了ボタンが押された場合
+    if (button.textContent === '対応終了') {
+        showHistoryModal();
         return;
     }
     
@@ -512,7 +539,89 @@ function updateProgressSidebar(currentStep) {
 let currentStep = 1;
 
 // 選択履歴
+let conversationHistory = [];
 let selections = {};
+
+// 対応履歴モーダルを表示する関数
+function showHistoryModal() {
+    // 履歴コンテンツの生成
+    const historyContent = document.getElementById('historyContent');
+    historyContent.innerHTML = '';
+    
+    // レポートヘッダーを追加
+    const now = new Date();
+    const headerDiv = document.createElement('div');
+    headerDiv.className = 'history-header';
+    headerDiv.innerHTML = `
+        <h3>対応日時: ${now.toLocaleString('ja-JP')}</h3>
+        <p>オペレーター名: 堀赤光子</p>
+    `;
+    historyContent.appendChild(headerDiv);
+    
+    // 各質問と回答を追加
+    conversationHistory.forEach((item) => {
+        if (!item.title) return; // タイトルがない場合はスキップ
+        
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'history-item';
+        
+        // 質問部分
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'history-question';
+        questionDiv.textContent = `質問 ${item.step}: ${item.title}`;
+        itemDiv.appendChild(questionDiv);
+        
+        // 回答部分
+        if (item.selection) {
+            const answerDiv = document.createElement('div');
+            answerDiv.className = 'history-answer';
+            answerDiv.textContent = `回答: ${item.selection}`;
+            itemDiv.appendChild(answerDiv);
+        }
+        
+        historyContent.appendChild(itemDiv);
+    });
+    
+    // モーダルを表示
+    const modal = document.getElementById('historyModal');
+    modal.style.display = 'block';
+}
+
+// 履歴モーダルを閉じる関数
+function closeHistoryModal() {
+    const modal = document.getElementById('historyModal');
+    modal.style.display = 'none';
+}
+
+// 履歴を印刷する関数
+function printHistory() {
+    // 印刷用に一時的なコンテンツを作成
+    const printContent = document.getElementById('historyContent').innerHTML;
+    const printWindow = window.open('', '_blank');
+    
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>対応履歴レポート</title>
+            <style>
+                body { font-family: sans-serif; padding: 20px; }
+                .history-header { margin-bottom: 20px; border-bottom: 2px solid #FF9800; padding-bottom: 10px; }
+                .history-item { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+                .history-question { font-weight: bold; color: #FF9800; margin-bottom: 5px; }
+                .history-answer { padding-left: 15px; }
+            </style>
+        </head>
+        <body>
+            <h1>対応履歴レポート</h1>
+            ${printContent}
+        </body>
+        </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+}
 
 // ページ読み込み時の初期化
 document.addEventListener('DOMContentLoaded', function() {
@@ -524,6 +633,13 @@ document.addEventListener('DOMContentLoaded', function() {
     showMessage(steps[currentStep].message);
     updateOptions(steps[currentStep].options);
     updateProgressSidebar(currentStep);
+    
+    // 履歴モーダルの閉じるボタンのイベントリスナー
+    document.querySelector('.close-modal').addEventListener('click', closeHistoryModal);
+    document.getElementById('closeHistory').addEventListener('click', closeHistoryModal);
+    
+    // 印刷ボタンのイベントリスナー
+    document.getElementById('printHistory').addEventListener('click', printHistory);
 });
 
 
