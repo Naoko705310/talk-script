@@ -559,7 +559,6 @@ function showHistoryModal() {
     headerDiv.className = 'history-header';
     headerDiv.innerHTML = `
         <h3>対応日時: ${now.toLocaleString('ja-JP')}</h3>
-        <p>オペレーター名: 堀赤光子</p>
     `;
     historyContent.appendChild(headerDiv);
     
